@@ -1,6 +1,6 @@
 ---
 name: yingdao-agent-bridge
-description: 在 Windows 上通过真实影刀 Studio 接口读取、创建、修改和验证任意自动化流程，作为 AI 助手操作本机影刀 RPA 的通用桥接层。仓库内置的 PDF/Excel/考勤例子仅为演示，不限制适用业务。用于用户希望 AI 操作本机影刀项目时。
+description: 在 Windows 上通过真实影刀 Studio 接口读取、创建、修改和验证任意自动化流程，作为 AI 助手操作本机影刀 RPA 的通用桥接层。仓库内置 PDF/Excel/考勤等示例，可直接复用，也可按新业务重新构建。用于用户希望 AI 操作本机影刀项目时。
 ---
 
 # Yingdao Agent Bridge
@@ -19,9 +19,9 @@ description: 在 Windows 上通过真实影刀 Studio 接口读取、创建、�
 
 报告必须忠于结构化证据：issues 中只有行号和原因时，按行号报告，不能猜测该行的报名编号。核对单元格和列宽只能说明这些项目保持，不能扩展成“所有格式完整保留”。业务处理在 programing.variable 表达式中实现时，不称为独立代码流程。PowerShell 5 不支持 `&&`，优先使用单条绝对路径命令，带空格的可执行文件路径用 `&` 调用。
 
-## 内置演示样例（非产品方向）
+## 仓库内置示例
 
-满足输入范围时优先复用已验证例子；运行前用 inspect 检查。使用启动器的 `pdf` 或 `sheet` 模式，参数和边界见 [docs/EXAMPLES.md](docs/EXAMPLES.md)。这些脚本会构建真正的影刀可视化流程并运行，独立读取输出核对。它们只展示桥接层的一种用法，**任意 PDF、扫描件、多工作表和任意网页不是已验证能力**；真实业务请按用户给定的字段和规则重新构建流程。
+仓库里带了几套已验证的示例，满足输入范围时可以直接复用；运行前用 inspect 检查。使用启动器的 `pdf` 或 `sheet` 模式，参数和边界见 [docs/EXAMPLES.md](docs/EXAMPLES.md)。这些脚本会构建真正的影刀可视化流程并运行，独立读取输出核对。新业务请按用户给定的字段和规则重新构建流程。
 
 不要把 .xlsx / .pdf 当文本交给 read_file：表格内容用 `sheet inspect --source ...`，PDF 用 `pdf inspect --pdf ...`；模板检查可通过仓库的 sheet_records.grid 获取单元格及列属性。构建命令可能持续数分钟，命令工具返回进程标识时查询同一进程，不再发起 create/extract/fill。
 
