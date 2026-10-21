@@ -1,0 +1,12 @@
+{
+  "flow_id": "REPLACE_WITH_NEW_FLOW_ID",
+  "blocks": [
+    {
+      "prototype": "programing.variable",
+      "label": "Bridge smoke test",
+      "inputs": {"value_type": "str", "value": {"expression": "'Hello from Yingdao Agent Bridge'"}},
+      "output": "bridge_message"
+    }
+  ],
+  "out_parameters": [{"name": "bridge_message", "type": "any"}]
+}

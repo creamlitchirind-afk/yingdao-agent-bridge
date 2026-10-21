@@ -1,0 +1,10 @@
+.local/
+.venv/
+__pycache__/
+*.pyc
+dist/
+*.log
+.env
+config.json
+~$*
+*.tmp
