@@ -54,7 +54,8 @@ def identify(f,s,colleges,week,kind):
     if weeks!={week}:raise ValueError(f'{f.name}: 周次不明确或不一致 {weeks}, 目标{week}')
     return both.pop(),not bool(nf)
 
-def parse_week(root,colleges,week):
+def parse_week(root,colleges,week,progress=None):
+    notify=progress or (lambda message:None)
     events=[];submitted=set();files=[];fallback=[];identities=set();errors=[]
     received={'attendance':set(),'late':set()}
     schedule_path=root/'课时分组.json'
@@ -108,7 +109,10 @@ def parse_week(root,colleges,week):
                             if len(bits)!=2:raise ValueError('名单须明确班级和姓名，无法判定: '+line)
                             emit(bits[0],bits[1],3,f'H{r}','晚点名')
                 w.close()
-            except Exception as exc:errors.append(f'{f.name}: {exc}')
+                notify(f'[材料读取完成] {college}第{week}周{folder}：{f.name}')
+            except Exception as exc:
+                errors.append(f'{f.name}: {exc}')
+                notify(f'[材料错误] 第{week}周 {f.name}：{exc}')
     if errors:raise ValueError('\n'.join(errors))
     return {'week':week,'submitted':sorted(submitted),'received':{k:sorted(v) for k,v in received.items()},'missing_late':sorted(received['attendance']-received['late']),'events':events,'files':files,'filename_fallback':fallback,'identities':[list(k) for k in sorted(identities)]}
 
@@ -175,7 +179,7 @@ def fill(s,reference,groups,submitted,colleges,title,cumulative,missing_late=Non
     s.print_area=f'A1:{chr(64+end)}{row}'
     return ordered
 
-def run(root,output,week):
+def run(root,output,week,progress=None):
     root=Path(root).resolve();output=Path(output).resolve()
     if output==root or root in output.parents:raise ValueError('结果目录必须与输入材料目录分开')
     output.mkdir(parents=True,exist_ok=True)
@@ -184,7 +188,7 @@ def run(root,output,week):
     base=load_workbook(blank);base.active=0;colleges=[base.active.cell(r,1).value for r in range(3,16)]
     if len(set(colleges))!=13:raise ValueError('初始总表学院名单不完整')
     statepath=output/'汇总台账.json';state=json.loads(statepath.read_text(encoding='utf-8')) if statepath.exists() else {'weeks':{}}
-    data=parse_week(root,colleges,week);state['weeks'][str(week)]=data
+    data=parse_week(root,colleges,week,progress=progress);state['weeks'][str(week)]=data
     weeks=sorted(map(int,state['weeks']));groups,submitted=aggregate([state['weeks'][str(n)] for n in weeks])
     scope=f'第{weeks[0]}周' if len(weeks)==1 else f'第{weeks[0]}-{weeks[-1]}周'
     if weeks!=list(range(weeks[0],weeks[-1]+1)):raise ValueError('累计周次不连续，不能使用连续范围标题')

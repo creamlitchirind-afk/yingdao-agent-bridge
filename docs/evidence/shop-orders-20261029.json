@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-29",
+  "environment": {"os": "Windows", "shadowbot": "6.3.39", "kunar": "2.1.0"},
+  "actor": "Kunar default agent, single instruction through CLI task; not GUI recording",
+  "run_id": "20261029T111507092Z_2ae421a7e",
+  "task_status": "success",
+  "task_elapsed_seconds": 60.05,
+  "native_instruction_count": 165,
+  "build_strategy": "copy verified native structure, fill current parameters, reread, run, verify",
+  "website": "https://shop.yingdao.com/list/table-list",
+  "product": "短袖T恤",
+  "pages": 3,
+  "source_rows": 24,
+  "output_rows": 21,
+  "total_amount": 209.79,
+  "static_errors": 0,
+  "runtime_errors": 0,
+  "independent_review": {"flow_readback_matches": true, "exact_rows_and_order": true, "numeric_amounts": true, "last_page_proof": true, "report_window_visible": true, "report_window_maximized": true},
+  "sha256": {"raw": "ebaa4bb04f3b1a36b2ad19913cc2f8d4d55fb7e8e917aea64e3f86aa255e120d", "output": "49396fcbbdc420f74c726462904b2cc3efec822084ced9f7649ea9b8e84037e0"},
+  "scope": "Recorded local run only; never hardcode these counts or totals. New-machine first builds need their own validation."
+}

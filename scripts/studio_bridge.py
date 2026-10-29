@@ -18,7 +18,7 @@ READ = {'app.get_info', 'app.list_flows', 'flow.blocks.list', 'flow.list_paramet
         'wiki.list', 'wiki.search', 'wiki.read', 'selector.list', 'selector.details',
         'codeflow.read', 'flow.get_variable_snapshots', 'flow.list_variables',
         'app.global_variables.list'}
-WRITE = {'flow.fill_blocks', 'flow.edit_blocks', 'flow.write_parameters',
+WRITE = {'app.rename_flow','app.delete_flow','flow.fill_blocks', 'flow.edit_blocks', 'flow.write_parameters',
          'app.run', 'app.save', 'app.create_flow', 'app.copy_flow', 'codeflow.write'}
 
 def stamp():
@@ -158,18 +158,29 @@ def invoke(name, arguments, allow_write=False):
         raise ValueError('Explicit --write is required')
     validate(name, arguments)
     if mutation:
+        if name in {'app.rename_flow','app.delete_flow'} and arguments.get('force'):
+            raise ValueError('Forced flow changes are not supported by this bridge')
+        if name=='app.delete_flow':
+            for flow_id in arguments['flow_ids']:
+                if flow_id=='main':raise ValueError('Cannot delete main')
+                guard(flow_id)
         target = arguments.get('flow_id')
-        if name not in {'app.create_flow', 'app.save'} and not target:
+        if name not in {'app.create_flow', 'app.save','app.delete_flow'} and not target:
             raise ValueError('Explicit flow_id required')
         guard(None if name == 'app.copy_flow' else target)
     evidence = settings.state_dir() / 'evidence' / (stamp() + '.json')
     record = {'tool':name, 'arguments':arguments, 'status':'prepared'}
     if mutation:
         if name.startswith('flow.'):
-            record['before'] = inspect_flow(arguments['flow_id'])
+            kinds=checked(invoke('app.list_flows',{})).get('flows',[]) if name=='flow.write_parameters' else []
+            is_code=any(f['flow_id']==arguments['flow_id'] and f['flow_kind']=='code' for f in kinds)
+            record['before'] = checked(invoke('codeflow.read',{'flow_id':arguments['flow_id']})) if is_code else inspect_flow(arguments['flow_id'])
             record['parameters_before'] = rpc('tools/call', {'name':'flow.list_parameters', 'arguments':{'flow_id':arguments['flow_id']}})
         elif name == 'codeflow.write':
             record['before'] = rpc('tools/call', {'name':'codeflow.read', 'arguments':{'flow_id':arguments['flow_id']}})
+        elif name in {'app.rename_flow','app.delete_flow'}:
+            affected=arguments['flow_ids'] if name=='app.delete_flow' else [arguments['flow_id']]
+            record['before']=[inspect_flow(flow_id) for flow_id in affected]
         record['binding'] = {'app_id':settings.load()['binding']['app_id']}
     dump(evidence, record)
     try:

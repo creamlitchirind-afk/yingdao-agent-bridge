@@ -15,3 +15,5 @@
 Python 依赖由 pip 从各自项目安装，不捆绑入压缩包：jsonschema、pypdf；开发/生成样例另需 openpyxl、reportlab。请保留并遵守所安装依赖自身的许可。样例 PDF 使用 ReportLab 内置中文 CID 字体描述，不携带系统字体文件。样例数据完全虚构。
 
 0.2版考勤运行新增openpyxl为安装依赖。考勤样例姓名由[Faker中文Provider](https://faker.readthedocs.io/en/latest/locales/zh_CN.html)生成；不捆绑Faker代码，运行固定样例不需安装Faker。表格结构参考用户提供的业务模板，公开版移除真实学校/学院/班级/邮箱，保留模拟姓名及演示数字。请勿将模拟材料当成真实考勤记录或官方模板。本项目许可证不代表对第三方软件、商标或原始材料的重新授权。
+
+0.3版网页案例使用[影刀练习商城](https://shop.yingdao.com/list/table-list)作为现场验证目标；仅发布实现、任务方法及无私人路径的结果摘要，不把网站或其数据重新授权为本项目内容。`examples/assets/shop-report-empty.xlsx`由本项目生成，只含空白布局与格式，不含历史订单。发布包不分发产品软件、浏览器插件或模型。

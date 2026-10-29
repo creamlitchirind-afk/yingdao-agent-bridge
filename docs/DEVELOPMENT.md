@@ -21,7 +21,7 @@ CLI 使用当前安装的 shadowbot.shell-cli.exe。本地 Studio 连接通过�
 }
 ```
 
-`output` 简写只适用于有一个真实输出槽的指令。多输出用 `outputs` 映射真实槽名。输入值可能是字面值、`{"variable":"变量名"}` 或 `{"expression":"表达式"}`，必须以当前指令资料为准。先执行 preflight；它检查 prototype 和输入字段名，不能证明表达式、元素定位或业务逻辑正确。当前 builder 是顺序插入器；任意嵌套控制结构尚未作为发布样例验证。
+`output` 简写只适用于有一个真实输出槽的指令。多输出用 `outputs` 映射真实槽名。输入值可能是字面值、`{"variable":"变量名"}` 或 `{"expression":"表达式"}`，必须以当前指令资料为准。先执行 preflight；它检查 prototype 和输入字段名，不能证明表达式、元素定位或业务逻辑正确。当前 builder 是顺序插入器；已有 forin 内嵌 if 的训练案例，见 [TRAINING_RESULTS.md](TRAINING_RESULTS.md)，不能推断任意嵌套结构均兼容。
 
 读取实际工具 schema：`yingdao.py tools --names flow.fill_blocks,app.copy_flow`。通用调用：`yingdao.py call --tool 工具名 --args @参数.json`，修改加 `--write`。适配器只开放代码中 READ/WRITE 集合的工具，不开放发布和删除应用。
 
@@ -50,6 +50,8 @@ CLI 使用当前安装的 shadowbot.shell-cli.exe。本地 Studio 连接通过�
 | 新插入块提示必填项 | 插入后尚未填参数是预期状态；检查填充结果，不能重复插入 |
 | failed_count/fill_errors | 视为失败，检查实际内容和构建断点 |
 | 流程成功但输出错误 | 以输出校验为准，检查输入、规则、对应步骤；不宣称完成 |
+| 当前流程结果正确但run_succeeded为false | 保留原始状态，查询diagnostics.snapshot核对错误的flow_id；本机实测同应用其他流程静态错误会影响此状态，在干净应用复测，不篡改成功标记 |
+| 浏览器打开file://报local file access错误 | 用仅绑定127.0.0.1的本地测试服务；不随意改变浏览器权限，也不声称元素定位能力已通过 |
 
 ## 提交修改
 

@@ -1,0 +1,19 @@
+[
+ {"prototype_name":"excel.launch","inputs":{"launch_way":"open","driver_way":"openpyxl","open_filename":"INPUT","isvisible":{"expression":"False"}},"outputs":{"excel_instance":"excel_instance"}},
+ {"prototype_name":"excel.read_data_from_workbook","inputs":{"workbook":{"variable":"excel_instance"},"read_way":"range","area_begin_row_num":{"expression":"2"},"area_begin_column_name":"A","area_end_row_num":{"expression":"2"},"area_end_column_name":"D","has_header_row":{"expression":"False"},"get_display_text":{"expression":"False"}},"outputs":{"excel_data":"excel_data"}},
+ {"prototype_name":"list.create","inputs":{},"outputs":{"list_instance":"matched_rows"}},
+ {"prototype_name":"workflow.forin","inputs":{"list":{"variable":"excel_data"},"output_with_index":{"expression":"False"}},"outputs":{"loop_item":"loop_item"}},
+ {"prototype_name":"list.get_elem","inputs":{"lst":{"variable":"loop_item"},"index":{"expression":"3"}},"outputs":{"list_instance":"absence_hours"}},
+ {"prototype_name":"workflow.if","inputs":{"operand1":{"variable":"absence_hours"},"operator":">","operand2":{"expression":"0"}},"outputs":{}},
+ {"prototype_name":"list.append_or_insert","inputs":{"lst":{"variable":"matched_rows"},"insert_way":"append","elem":{"variable":"loop_item"}},"outputs":{}},
+ {"prototype_name":"workflow.endif","inputs":{},"outputs":{}},
+ {"prototype_name":"workflow.endloop","inputs":{},"outputs":{}},
+ {"prototype_name":"excel.launch","inputs":{"launch_way":"create","driver_way":"openpyxl","save_filename":"OUTPUT","isvisible":{"expression":"False"}},"outputs":{"excel_instance":"excel_instance2"}},
+ {"prototype_name":"json.to_json","inputs":{"text":"[[\"学院\",\"班级\",\"姓名\",\"缺勤学时\"]]"},"outputs":{"json_instance":"header_rows"}},
+ {"prototype_name":"excel.write_data_to_workbook","inputs":{"workbook":{"variable":"excel_instance2"},"write_range":"area","row_num":{"expression":"1"},"column_name":"A","content":{"variable":"header_rows"}},"outputs":{}},
+ {"prototype_name":"list.get_len","inputs":{"lst":{"variable":"matched_rows"}},"outputs":{"list_len":"matched_count"}},
+ {"prototype_name":"workflow.if","inputs":{"operand1":{"variable":"matched_count"},"operator":">","operand2":{"expression":"0"}},"outputs":{}},
+ {"prototype_name":"excel.write_data_to_workbook","inputs":{"workbook":{"variable":"excel_instance2"},"write_range":"area","row_num":{"expression":"2"},"column_name":"A","content":{"variable":"matched_rows"}},"outputs":{}},
+ {"prototype_name":"workflow.endif","inputs":{},"outputs":{}},
+ {"prototype_name":"excel.save","inputs":{"excel_instance":{"variable":"excel_instance2"},"save_way":"save","overwrite_file":{"expression":"True"},"is_close_after_save":{"expression":"True"}},"outputs":{}}
+]

@@ -1,0 +1,194 @@
+[
+  {
+    "prototype_name": "excel.launch",
+    "inputs": {
+      "launch_way": "open",
+      "driver_way": "openpyxl",
+      "open_filename": "C:\\path\\to\\input_file.xlsx",
+      "isvisible": {
+        "expression": "False"
+      },
+      "ignoreformula": {
+        "expression": "False"
+      },
+      "update_links": {
+        "expression": "False"
+      }
+    },
+    "outputs": {
+      "excel_instance": "excel_instance"
+    }
+  },
+  {
+    "prototype_name": "excel.read_data_from_workbook",
+    "inputs": {
+      "workbook": {
+        "variable": "excel_instance"
+      },
+      "read_way": "range",
+      "area_begin_row_num": {
+        "expression": "2"
+      },
+      "area_begin_column_name": "A",
+      "area_end_row_num": {
+        "expression": "7"
+      },
+      "area_end_column_name": "D",
+      "has_header_row": {
+        "expression": "False"
+      },
+      "get_display_text": {
+        "expression": "False"
+      },
+      "using_text": {
+        "expression": "False"
+      },
+      "clear_space": {
+        "expression": "False"
+      }
+    },
+    "outputs": {
+      "excel_data": "excel_data"
+    }
+  },
+  {
+    "prototype_name": "excel.launch",
+    "inputs": {
+      "launch_way": "create",
+      "driver_way": "openpyxl",
+      "save_filename": "C:\\path\\to\\output_file.xlsx",
+      "isvisible": {
+        "expression": "False"
+      },
+      "ignoreformula": {
+        "expression": "False"
+      },
+      "update_links": {
+        "expression": "False"
+      }
+    },
+    "outputs": {
+      "excel_instance": "excel_instance2"
+    }
+  },
+  {
+    "prototype_name": "excel.write_data_to_workbook",
+    "inputs": {
+      "workbook": {
+        "variable": "excel_instance2"
+      },
+      "write_range": "area",
+      "write_way": "append",
+      "write_column_way": "override",
+      "content": {
+        "expression": "[['学院', '班级', '姓名', '缺勤学时']]"
+      },
+      "row_num": {
+        "expression": "1"
+      },
+      "column_name": "A",
+      "begin_row_num": "1"
+    },
+    "outputs": {}
+  },
+  {
+    "prototype_name": "programing.variable",
+    "inputs": {
+      "value_type": "int",
+      "value": {
+        "expression": "2"
+      }
+    },
+    "outputs": {
+      "variable": "output_row"
+    }
+  },
+  {
+    "prototype_name": "workflow.forin",
+    "inputs": {
+      "list": {
+        "variable": "excel_data"
+      },
+      "loop_start_index": "0",
+      "loop_end_index": "-1",
+      "output_with_index": {
+        "expression": "False"
+      }
+    },
+    "outputs": {
+      "loop_item": "loop_item"
+    }
+  },
+  {
+    "prototype_name": "workflow.if",
+    "inputs": {
+      "operand1": {
+        "expression": "float(loop_item[3])"
+      },
+      "operator": ">",
+      "operand2": {
+        "expression": "0"
+      },
+      "operator_options": "{}"
+    },
+    "outputs": {}
+  },
+  {
+    "prototype_name": "excel.write_data_to_workbook",
+    "inputs": {
+      "workbook": {
+        "variable": "excel_instance2"
+      },
+      "write_range": "area",
+      "write_way": "append",
+      "write_column_way": "override",
+      "content": {
+        "expression": "[loop_item]"
+      },
+      "row_num": {
+        "expression": "output_row"
+      },
+      "column_name": "A",
+      "begin_row_num": "1"
+    },
+    "outputs": {}
+  },
+  {
+    "prototype_name": "programing.variable",
+    "inputs": {
+      "value_type": "int",
+      "value": {
+        "expression": "output_row + 1"
+      }
+    },
+    "outputs": {
+      "variable": "output_row"
+    }
+  },
+  {
+    "prototype_name": "workflow.endif",
+    "inputs": {},
+    "outputs": {}
+  },
+  {
+    "prototype_name": "workflow.endloop",
+    "inputs": {},
+    "outputs": {}
+  },
+  {
+    "prototype_name": "excel.save",
+    "inputs": {
+      "excel_instance": {
+        "variable": "excel_instance2"
+      },
+      "save_way": "save",
+      "overwrite_file": {
+        "expression": "True"
+      },
+      "is_close_after_save": {
+        "expression": "False"
+      }
+    },
+    "outputs": {}
+  }
+]
